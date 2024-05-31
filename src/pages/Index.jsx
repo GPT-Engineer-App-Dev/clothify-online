@@ -1,7 +1,26 @@
-import { Box, Container, Flex, Heading, Image, Link, SimpleGrid, Text, VStack } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Image, Link, SimpleGrid, Text, VStack, Select } from "@chakra-ui/react";
+import { useState } from "react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 
 const Index = () => {
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const handleCategoryChange = (event) => {
+    setSelectedCategory(event.target.value);
+  };
+
+  const products = [
+    { id: 1, name: "Product 1", price: "$49.99", category: "Men", image: "https://via.placeholder.com/300" },
+    { id: 2, name: "Product 2", price: "$59.99", category: "Women", image: "https://via.placeholder.com/300" },
+    { id: 3, name: "Product 3", price: "$69.99", category: "Kids", image: "https://via.placeholder.com/300" },
+    { id: 4, name: "Product 4", price: "$79.99", category: "Accessories", image: "https://via.placeholder.com/300" },
+    // Add more products as needed
+  ];
+
+  const filteredProducts = selectedCategory === "All"
+    ? products
+    : products.filter(product => product.category === selectedCategory);
+
   return (
     <Box>
       {/* Navigation Bar */}
@@ -28,31 +47,39 @@ const Index = () => {
         </Container>
       </Box>
 
+      {/* Category Filter */}
+      <Box as="section" bg="gray.100" py={4} textAlign="center">
+        <Container maxW="container.xl">
+          <Select
+            placeholder="Select Category"
+            onChange={handleCategoryChange}
+            value={selectedCategory}
+            mb={6}
+            maxW="300px"
+            mx="auto"
+          >
+            <option value="All">All</option>
+            <option value="Men">Men</option>
+            <option value="Women">Women</option>
+            <option value="Kids">Kids</option>
+            <option value="Accessories">Accessories</option>
+          </Select>
+        </Container>
+      </Box>
+
       {/* Product Grid */}
       <Container maxW="container.xl" py={10}>
         <Heading as="h3" size="lg" mb={6}>Featured Products</Heading>
         <SimpleGrid columns={[1, 2, 3]} spacing={10}>
-          <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-            <Image src="https://via.placeholder.com/300" alt="Product 1" />
-            <Box p={6}>
-              <Text fontWeight="bold" fontSize="xl">Product 1</Text>
-              <Text mt={2}>$49.99</Text>
+          {filteredProducts.map(product => (
+            <Box key={product.id} borderWidth="1px" borderRadius="lg" overflow="hidden">
+              <Image src={product.image} alt={product.name} />
+              <Box p={6}>
+                <Text fontWeight="bold" fontSize="xl">{product.name}</Text>
+                <Text mt={2}>{product.price}</Text>
+              </Box>
             </Box>
-          </Box>
-          <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-            <Image src="https://via.placeholder.com/300" alt="Product 2" />
-            <Box p={6}>
-              <Text fontWeight="bold" fontSize="xl">Product 2</Text>
-              <Text mt={2}>$59.99</Text>
-            </Box>
-          </Box>
-          <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-            <Image src="https://via.placeholder.com/300" alt="Product 3" />
-            <Box p={6}>
-              <Text fontWeight="bold" fontSize="xl">Product 3</Text>
-              <Text mt={2}>$69.99</Text>
-            </Box>
-          </Box>
+          ))}
         </SimpleGrid>
       </Container>
 
