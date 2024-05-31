@@ -1,12 +1,19 @@
-import { Box, Container, Flex, Heading, Image, Link, SimpleGrid, Text, VStack, Select } from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Image, Link, SimpleGrid, Text, VStack, Select, IconButton, Badge } from "@chakra-ui/react";
 import { useState } from "react";
-import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaInstagram, FaTwitter, FaShoppingCart } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [cart, setCart] = useState([]);
+  const navigate = useNavigate();
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
+  };
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
   };
 
   const products = [
@@ -33,6 +40,18 @@ const Index = () => {
               <Link href="#" mx={2}>Shop</Link>
               <Link href="#" mx={2}>About</Link>
               <Link href="#" mx={2}>Contact</Link>
+              <IconButton
+                icon={<FaShoppingCart />}
+                aria-label="Cart"
+                mx={2}
+                onClick={() => navigate('/cart')}
+              >
+                {cart.length > 0 && (
+                  <Badge ml={1} colorScheme="red">
+                    {cart.length}
+                  </Badge>
+                )}
+              </IconButton>
             </Flex>
           </Flex>
         </Container>
@@ -77,6 +96,17 @@ const Index = () => {
               <Box p={6}>
                 <Text fontWeight="bold" fontSize="xl">{product.name}</Text>
                 <Text mt={2}>{product.price}</Text>
+                <Link
+                  href="#"
+                  bg="blue.500"
+                  color="white"
+                  px={4}
+                  py={2}
+                  borderRadius="md"
+                  onClick={() => addToCart(product)}
+                >
+                  Add to Cart
+                </Link>
               </Box>
             </Box>
           ))}
